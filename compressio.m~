@@ -1,0 +1,15 @@
+function compressio()
+Nram = size(sr,2)
+% number of frames
+Aall = zeros (P,Nram); % will store them without a0=1 !
+Gall = zeros (1,Nram);
+for n=1:Nram,
+	[a,e] = compression1(sr(:,n), 10);
+	a = a(2:(P+1))’;
+	% discarding a0 = 1
+	Aall(:,n) = a;
+	Gall(n) = sqrt(e);
+end
+Aall
+end
+

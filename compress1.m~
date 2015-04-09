@@ -1,0 +1,67 @@
+function  A = compress(original_file_name)
+	S = wavread(original_file_name);
+	Sm = S - mean(S);
+	N = length(S);	
+	j = 1;
+	for i = 1: floor(N/160)
+		sr(1:160,i) = S(j:j+159);
+		j = j + 160;
+	end
+	[Nram nram] = size(sr);
+	if (N-(Nram *nram))>0
+		sr(1:(N-(Nram *nram)),i+1) = S (j:N);
+	end
+	[nram Nram] = size(sr);
+	x = sr(:,1);
+	y = sr(:,2);	
+	p = 30;
+	Ns= 160;
+	w = 1; 
+	A = zeros( (p+1)* Nram,1 );
+	for n = 1 : Nram
+		%R = zeros(p+1,p+1);
+		x = sr(:,n);			
+		r = zeros( p, 1);
+		r0 = sum( x(1:Ns) .* x(1:Ns) );
+		for k = 1: p
+			r(k) = sum( x(k+1:Ns) .* x(1:Ns-k) );
+		end
+		%R = zeros(p+1,1);
+		%for i = 1 : p+1
+		%	for j = 1: p - i
+		%		R(i) +=  x(j) * x(j+i);
+		%	end
+		%end
+		%a = zeros(p+1,1);
+		%a(1) = 1;
+		%E = R(1);
+		%for k = 0 : p-1
+		%	l = 0;
+		%	for j = 0 : k
+		%		l =l - a( j+1 ) * R( k-j+2 );
+		%	end
+		%	l = l/ E;
+		%	for n = 0 : (k+1)/2
+		%		temp = a(k+2-n) + l * a(n+1);
+		%		a(n+1) = a(n+1) + l * a(k+2-n);
+		%		a(k+2-n) = temp;
+		%	end
+		%	E = E * (1 - l * l);
+		%end	
+		%b = a(2:p+1);
+		a = durbin(r0,r,p);
+		A(w:w+p) = a;
+		w = w+p;	
+	end
+	output = original_file_name;
+	x = '';
+	for i =1: length(original_file_name)
+		if output(i) ~= '.'
+			x =strcat(x,output(i));
+		else 
+			break;
+		end
+	end
+	output = strcat(x,".compressed");
+	wavwrite(A,output);
+endfunction

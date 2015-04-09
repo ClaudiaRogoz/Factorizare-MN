@@ -1,0 +1,18 @@
+% P2.2 cor.m
+function a = cor(u)
+% u - Input signal.
+% N - Length of input signal.
+% M - Maximum lag value.
+N=length(u);
+M = 20;
+
+% ALLOCATE RETURN VECTOR
+r = zeros( M, 1 );
+% COMPUTE r(0)
+r0 = sum( u(1:N) .* u(1:N) );
+% COMPUTE C(i), i NONZERO
+for i = 1:M
+    r(i) = sum( u(i+1:N) .* u(1:N-i) );
+end
+a =durbin(r0, r,M);
+endfunction

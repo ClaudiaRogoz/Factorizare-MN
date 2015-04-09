@@ -1,0 +1,12 @@
+function k = pctorc( lpc )
+m = length(lpc)-1;
+MAXNO = m; 
+k = zeros( MAXNO, 1 );
+a = lpc;
+for i = m:-1:2
+    k(i) = -a( i+1 );
+    t( i:-1:2 ) = ( a( i:-1:2 ) + ( k(i) .* a(2:i) ) ) / ...
+                  ( 1.0 - ( k(i) * k(i) ) );
+    a( 2:i ) = t( 2:i );
+end
+k(1) = -a(2);

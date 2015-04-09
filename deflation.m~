@@ -1,0 +1,10 @@
+function [V,lambda] = deflation(A)
+[C, K] = eig(A);
+d = length(C);
+V = zeros(d,K);
+for j=1:K
+  [lambda(j), V(:,j)] = MPD(C);
+  C = C - lambda(j)*V(:,j)*V(:,j)'; % deflation
+end
+
+end

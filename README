@@ -1,0 +1,19 @@
+Rogoz Claudia 311CA
+
+Task 1
+Se utilizeaza metoda factorizarii ortogonale Gram-Schmidt modificat. 
+In cadrul functiei solve(A,b) se rezolva sistemul respectiv utilizand metoda gram-schmidt.Astfel 'in urma descompunerii matricei A in Q, R , noul A va fi R (matricea superior triunghiulara) iar b va deveni b = Q' * R. In cele din urma se aplica SST pe sistemul nou format.
+
+Task 2
+Initial se ia o matrice care va fi matricea unitate care pe parcursul iteratiilor va deveni matricea ai carei coloane sunt chiar vectorii proprii ai matricei A.
+In cadrul iteratiilor se descompune matriecea A, pe rand, in matricile R si Q pentru a-i fi atribuita apoi produsul dintre R * Q.
+La final, valorile proprii ale matricei A se vor afla pe diagonala.
+
+Task 3
+In cadrul readFile se construieste matricea A pe baza citirilor de la intrare.
+In cadrul functiei eigenValuesVectors se afla vectorul frecventelor "l" si totodata se normalizaeaza vactorii proprii prin impartirea la ultimul element din coloana.
+In cadrul functiei writeResults, se scriu rezulatele in fisierul primit ca parametru.
+
+Task 4
+
+

@@ -1,0 +1,20 @@
+function linearprediction() 
+s = wavread ("fun.wav");
+sm = s - mean(s);
+plot (sm); sound (sm);
+sr = frame (sm, 160, 0); % no overlap !
+% one frame to play with
+x = sr (:,7);
+plot (x);
+P = 10;
+R = zeros(P+1,1);
+N = 160;
+for k = 0:P,
+% to be able to multiply the signals, they must have same length
+xaux = [x; zeros(k,1)];
+xauxshifted = [zeros(k,1); x];
+plot (1:(N+k), xaux, 1:(N+k), xauxshifted); pause;
+r = sum (xaux .* xauxshifted) % this would also work with scalar product
+R(k+1) = r; % attention, Matlab indexes from 1 :-(
+end
+endfunction

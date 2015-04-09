@@ -1,0 +1,69 @@
+ function [ar,e,k]=lpcauto(original_file_name)
+s = wavread(original_file_name);
+p = 12;
+nf = 20;
+ s = s(:); % make it a column vector
+ if nargin < 2 p=12; end;
+ if nargin < 3 t=length(s); end;
+%if nargin < 4 w='ham'; end;
+ [nf,ng]=size(t);
+ if ng<2 t=[t t]; end;
+ if ng<3 t=[t zeros(nf,1)]; end;
+ if nf==1
+     nf=floor(1+(length(s)-t(2)-t(3))/t(1));
+     tr=0;
+ else
+     tr=1;
+ end;
+ 
+ ar=zeros(nf,p+1);
+ ar(:,1)=1;
+ e=zeros(nf,1);
+ t1=1;
+ it=1;
+ nw=-1;
+ zp=zeros(1,p);
+ r=(0:p);
+ for jf=1:nf
+     k(jf,1) = ceil(t1+t(it,3));
+     k(jf,2) = ceil(t1+t(it,3)+t(it,2)-1);
+     cs = (k(jf,1):k(jf,2)).';
+     nc = length(cs);
+     pp=min(p,nc);
+     dd=s(cs);
+     if nc~=nw
+        % possibly we should have a window whose square integral equals unity
+         ww=hamming(nc); nw=nc;
+         y=zeros(1,nc+p);
+         c=(1:nc)';
+     end
+     wd=dd(:).*ww;        % windowed data vector
+     y(1:nc)=wd;          % data vector with p appended zeros
+     z=zeros(nc,pp+1);    % data matrix
+     %  was previously  z(:)=y(c(:,ones(1,pp+1))+r(ones(nc,1),1:pp+1));
+     z(:)=y(repmat(c,1,pp+1)+repmat(r,nc,1));
+     rr=wd'*z;
+     rm=toeplitz(rr(1:pp));
+     rk=rank(rm);
+     if rk
+         if rk<pp
+             rm=rm(1:rk,1:rk);
+         end
+         ar(jf,2:rk+1)=-rr(2:rk+1)/rm;
+     end
+     e(jf)=rr*ar(jf,1:pp+1)';
+     t1=t1+t(it,1);
+     it=it+tr;
+	output = original_file_name;
+	x = '';
+	for i =1: length(original_file_name)
+		if output(i) ~= '.'
+			x =strcat(x,output(i));
+		else 
+			break;
+		end
+	end
+	output = strcat(x,".compressed");
+	wavwrite(ar,output);
+ end
+

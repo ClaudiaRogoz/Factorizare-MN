@@ -1,0 +1,15 @@
+function [v, lambda] = deflatie(A)
+	[n n] = size(A);
+	[l x ok] = MPD(A, ones(n, 1), 10000, 10^(-15));
+	lambda(1) = l;
+	v(:,1) = x;
+	B = A - l*x*x';
+	for i = 2:n
+		[l x ok] = MPD(B, ones(n, 1), 10000, 10^(-15));
+		lambda(i) = l;
+		v(:,i) = x;
+		B = B - l*x*x';
+	end
+endfunction
+
+

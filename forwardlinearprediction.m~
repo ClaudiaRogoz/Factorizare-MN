@@ -1,0 +1,42 @@
+function x
+void ForwardLinearPrediction( vector<double> &coeffs, const vector<double> &x )
+{
+size_t N = x.size() - 1;
+size_t m = coeffs.size();
+// INITIALIZE R WITH AUTOCORRELATION COEFFICIENTS
+vector<double> R( m + 1, 0.0 );
+for ( size_t i = 0; i <= m; i++ )
+{
+for ( size_t j = 0; j <= N - i; j++ )
+{
+R[ i ] += x[ j ] * x[ j + i ];
+}
+}
+// INITIALIZE Ak
+vector<double> Ak( m + 1, 0.0 );
+Ak[ 0 ] = 1.0;
+// INITIALIZE Ek
+double Ek = R[ 0 ];
+// LEVINSON-DURBIN RECURSION
+for ( size_t k = 0; k < m; k++ )
+{
+// COMPUTE LAMBDA
+double lambda = 0.0;
+for ( size_t j = 0; j <= k; j++ )
+{
+lambda -= Ak[ j ] * R[ k + 1 - j ];
+6}
+lambda /= Ek;
+// UPDATE Ak
+for ( size_t n = 0; n <= ( k + 1 ) / 2; n++ )
+{
+double temp = Ak[ k + 1 - n ] + lambda * Ak[ n ];
+Ak[ n ] = Ak[ n ] + lambda * Ak[ k + 1 - n ];
+Ak[ k + 1 - n ] = temp;
+}
+// UPDATE Ek
+Ek *= 1.0 - lambda * lambda;
+}
+// ASSIGN COEFFICIENTS
+coeffs.assign( ++Ak.begin(), Ak.end() );
+}
